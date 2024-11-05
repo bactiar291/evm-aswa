@@ -3,7 +3,7 @@ const axios = require('axios');
 const fs = require('fs');
 const bip39 = require('bip39'); // Importing bip39 for mnemonic validation
 
-// Fungsi untuk memuat konfigurasi dari file JSON atau TXT
+
 const loadConfig = () => {
   let config = {};
   if (fs.existsSync('config.json')) {
@@ -20,7 +20,7 @@ const loadConfig = () => {
   return config;
 };
 
-// Memuat konfigurasi API keys
+
 const config = loadConfig();
 if (
   !config.ETHERSCAN_KEY ||
@@ -33,7 +33,7 @@ if (
   process.exit(1);
 }
 
-// Fungsi untuk mendapatkan informasi dompet dari Etherscan
+
 const getWalletInfo = async (address) => {
   const apiKey = config.ETHERSCAN_KEY;
   const apiUrl = `https://api.etherscan.io/api?module=account&action=balance&address=${address}&apikey=${apiKey}`;
@@ -61,7 +61,7 @@ const getWalletInfo = async (address) => {
   throw new Error(`Max retries reached. Unable to retrieve wallet info for address ${address}`);
 };
 
-// Fungsi untuk mendapatkan saldo dari jaringan lain
+
 const getOtherWalletInfo = async (address, network) => {
   const apiUrl = network === 'BSC'
     ? `https://api.bscscan.com/api?module=account&action=balance&address=${address}&apikey=${config.BSCSCAN_KEY}`
@@ -87,22 +87,22 @@ const getOtherWalletInfo = async (address, network) => {
   return '0.0';
 };
 
-// Fungsi untuk membuat mnemonic acak yang valid
+
 const generateValidRandomWords = async () => {
   const { generate } = await import('random-words'); // Menggunakan dynamic import untuk random-words
   let mnemonic;
   do {
-    // Menghasilkan 12 atau 24 kata acak
+    
     const wordCount = Math.random() < 0.5 ? 12 : 24;
     const randomWords = generate(wordCount).join(' ');
 
-    // Validasi mnemonic
+    
     mnemonic = randomWords;
   } while (!bip39.validateMnemonic(mnemonic)); // Validasi mnemonic dengan bip39
   return mnemonic;
 };
 
-// Fungsi untuk menulis data ke file
+
 const writeToFile = (data) => {
   const { eth, bnb, polygon, arbitrum, mnemonic } = data;
   const ethBalance = eth ? `${eth.balance} ETH` : '0.0 ETH';
@@ -124,10 +124,10 @@ const writeToFile = (data) => {
   );
 };
 
-// Fungsi delay
+
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// Blok eksekusi utama
+
 (async () => {
   try {
     let randomWords;
