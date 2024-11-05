@@ -1,0 +1,5 @@
+ETHERSCAN_KEY=isi api key eth
+BSCSCAN_KEY=isi api key bsc
+POLYGONSCAN_KEY=isi api key poly
+ARBISCAN_KEY=isi api key arb
+OPTIMISM_ETHERSCAN_KEY=isi api key opt
