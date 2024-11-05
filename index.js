@@ -1,8 +1,8 @@
 const ethers = require('ethers');
 const axios = require('axios');
 const fs = require('fs');
-const bip39 = require('bip39'); 
-const generate = require('random-words'); 
+const bip39 = require('bip39');
+const generate = require('random-words');
 
 const loadConfig = () => {
   let config = {};
@@ -84,21 +84,19 @@ const getOtherWalletInfo = async (address, network) => {
   return '0.0';
 };
 
-
 const generateValidRandomWords = async () => {
   let mnemonic;
   do {
     const wordCount = Math.random() < 0.5 ? 12 : 24;
-    const randomWords = generate(wordCount).join(' '); // Menggunakan generate dari random-words
+    const randomWords = generate(wordCount).join(' ');
 
     mnemonic = randomWords;
-  } while (!bip39.validateMnemonic(mnemonic)); // Validasi mnemonic dengan bip39
+  } while (!bip39.validateMnemonic(mnemonic));
   return mnemonic;
 };
 
-
 const saveMnemonicToFile = (mnemonic) => {
-  fs.appendFileSync('mnemonic.txt', `${mnemonic}\n`, 'utf8'); // Menyimpan mnemonic ke dalam mnemonic.txt
+  fs.appendFileSync('mnemonic.txt', `${mnemonic}\n`, 'utf8');
 };
 
 const writeToFile = (data) => {
@@ -132,7 +130,7 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     do {
       try {
-        randomWords = await generateValidRandomWords(); 
+        randomWords = await generateValidRandomWords();
         checkWallet = ethers.Wallet.fromMnemonic(randomWords);
 
         walletInfo = await getWalletInfo(checkWallet.address);
@@ -146,19 +144,16 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
         console.log('Polygon Wallet Balance:', polygonBalance, 'MATIC');
         console.log('Arbitrum Wallet Balance:', arbitrumBalance, 'ETH');
 
-        if (parseFloat(walletInfo.balance) > 0 || parseFloat(bnbBalance) > 0 || parseFloat(polygonBalance) > 0 || parseFloat(arbitrumBalance) > 0) {
-          console.log('Wallet with balance found!');
-          writeToFile({
-            address: checkWallet.address,
-            eth: walletInfo,
-            bnb: bnbBalance,
-            polygon: polygonBalance,
-            arbitrum: arbitrumBalance,
-            mnemonic: randomWords,
-          });
-          saveMnemonicToFile(randomWords); 
-          process.exit();
-        }
+        saveMnemonicToFile(randomWords);
+
+        writeToFile({
+          address: checkWallet.address,
+          eth: walletInfo,
+          bnb: bnbBalance,
+          polygon: polygonBalance,
+          arbitrum: arbitrumBalance,
+          mnemonic: randomWords,
+        });
 
         await delay(1000);
       } catch (error) {
