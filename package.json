@@ -1,0 +1,18 @@
+{
+  "name": "evm-aswa",
+  "version": "1.0.0",
+  "description": "xxxxxxx",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "ethers": "^5.7.0",
+    "axios": "^1.6.0",
+    "fs-extra": "^10.1.0",
+    "bip39": "^3.0.4",
+    "random-words": "^1.0.0"
+  },
+  "author": "bactiar 291",
+  "license": "MIT"
+}
