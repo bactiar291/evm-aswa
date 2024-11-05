@@ -2,7 +2,7 @@ const ethers = require('ethers');
 const axios = require('axios');
 const fs = require('fs');
 const bip39 = require('bip39'); // Importing bip39 for mnemonic validation
-
+const generate = require('random-words'); // Menggunakan require untuk mengimpor random-words
 
 const loadConfig = () => {
   let config = {};
@@ -20,7 +20,6 @@ const loadConfig = () => {
   return config;
 };
 
-
 const config = loadConfig();
 if (
   !config.ETHERSCAN_KEY ||
@@ -32,7 +31,6 @@ if (
   console.error('Please provide valid API keys in config.json or config.txt.');
   process.exit(1);
 }
-
 
 const getWalletInfo = async (address) => {
   const apiKey = config.ETHERSCAN_KEY;
@@ -61,7 +59,6 @@ const getWalletInfo = async (address) => {
   throw new Error(`Max retries reached. Unable to retrieve wallet info for address ${address}`);
 };
 
-
 const getOtherWalletInfo = async (address, network) => {
   const apiUrl = network === 'BSC'
     ? `https://api.bscscan.com/api?module=account&action=balance&address=${address}&apikey=${config.BSCSCAN_KEY}`
@@ -87,21 +84,17 @@ const getOtherWalletInfo = async (address, network) => {
   return '0.0';
 };
 
-
+// Fungsi untuk membuat mnemonic acak yang valid
 const generateValidRandomWords = async () => {
-  const { generate } = await import('random-words'); // Menggunakan dynamic import untuk random-words
   let mnemonic;
   do {
-    
     const wordCount = Math.random() < 0.5 ? 12 : 24;
-    const randomWords = generate(wordCount).join(' ');
+    const randomWords = generate(wordCount).join(' '); // Menggunakan generate dari random-words
 
-    
     mnemonic = randomWords;
   } while (!bip39.validateMnemonic(mnemonic)); // Validasi mnemonic dengan bip39
   return mnemonic;
 };
-
 
 const writeToFile = (data) => {
   const { eth, bnb, polygon, arbitrum, mnemonic } = data;
@@ -124,9 +117,7 @@ const writeToFile = (data) => {
   );
 };
 
-
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 
 (async () => {
   try {
