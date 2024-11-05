@@ -1,8 +1,8 @@
 const ethers = require('ethers');
 const axios = require('axios');
 const fs = require('fs');
-const bip39 = require('bip39'); // Importing bip39 for mnemonic validation
-const generate = require('random-words'); // Menggunakan require untuk mengimpor random-words
+const bip39 = require('bip39'); 
+const generate = require('random-words'); 
 
 const loadConfig = () => {
   let config = {};
@@ -84,7 +84,7 @@ const getOtherWalletInfo = async (address, network) => {
   return '0.0';
 };
 
-// Fungsi untuk membuat mnemonic acak yang valid
+
 const generateValidRandomWords = async () => {
   let mnemonic;
   do {
@@ -94,6 +94,11 @@ const generateValidRandomWords = async () => {
     mnemonic = randomWords;
   } while (!bip39.validateMnemonic(mnemonic)); // Validasi mnemonic dengan bip39
   return mnemonic;
+};
+
+
+const saveMnemonicToFile = (mnemonic) => {
+  fs.appendFileSync('mnemonic.txt', `${mnemonic}\n`, 'utf8'); // Menyimpan mnemonic ke dalam mnemonic.txt
 };
 
 const writeToFile = (data) => {
@@ -127,7 +132,7 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     do {
       try {
-        randomWords = await generateValidRandomWords(); // Menghasilkan mnemonic yang valid
+        randomWords = await generateValidRandomWords(); 
         checkWallet = ethers.Wallet.fromMnemonic(randomWords);
 
         walletInfo = await getWalletInfo(checkWallet.address);
@@ -151,6 +156,7 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
             arbitrum: arbitrumBalance,
             mnemonic: randomWords,
           });
+          saveMnemonicToFile(randomWords); 
           process.exit();
         }
 
